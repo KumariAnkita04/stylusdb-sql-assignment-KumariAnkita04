@@ -1,25 +1,3 @@
-// const parseQuery = require('./queryParser');
-// const readCSV = require('./csvReader');
-
-// async function executeSELECTQuery(query) {
-//     const { fields, table } = parseQuery(query);
-//     const data = await readCSV(`${table}.csv`);
-    
-//     // Filter the fields based on the query
-//     return data.map(row => {
-//         const filteredRow = {};
-//         fields.forEach(field => {
-//             filteredRow[field] = row[field];
-//         });
-//         return filteredRow;
-//     });
-// }
-
-// module.exports = executeSELECTQuery;
-
-const parseQuery = require('./queryParser');
-const readCSV = require('./csvReader');
-
 async function executeSELECTQuery(query) {
     const { fields, table, whereClause } = parseQuery(query);
     const data = await readCSV(`${table}.csv`);
@@ -28,7 +6,8 @@ async function executeSELECTQuery(query) {
     const filteredData = whereClause
         ? data.filter(row => {
             const [field, value] = whereClause.split('=').map(s => s.trim());
-            return row[field] === value;
+            const fieldValue = row[field.toLowerCase()]; // Convert field name to lowercase
+            return fieldValue && fieldValue.toLowerCase() === value.toLowerCase(); // Convert both field value and provided value to lowercase for case-insensitive comparison
         })
         : data;
 
