@@ -785,3 +785,4 @@ test('DISTINCT with ORDER BY and LIMIT', async () => {
     // Expecting the two highest unique ages
     expect(result).toEqual([{ age: '30' }, { age: '25' }]);
 });
+
